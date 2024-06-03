@@ -1,7 +1,10 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 from .serializers import SystemSerializer
 from .models import System
+from .filters import SystemFilter
 
 
 class SystemViewSet(ModelViewSet):
@@ -12,6 +15,10 @@ class SystemViewSet(ModelViewSet):
     serializer_class = SystemSerializer
     queryset = System.objects.all()
     permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_class = SystemFilter
+    ordering_fields = ["setup_date", "capacity", "name"]
+    ordering = ["setup_date"]
 
     def get_queryset(self):
         """
