@@ -49,9 +49,9 @@ Application facilitate hydroponic system management implemented using microservi
 
 ### Connect with API Gateway via:
 
-Auth: *http://127.0.0.1/api/v1/schema/auth*
-System: *http://127.0.0.1/api/v1/schema/system*
-Measurements: *http://127.0.0.1/api/v1/schema/measurement*
+Auth: *http://127.0.0.1:8000/api/v1/schema/auth* <br> 
+System: *http://127.0.0.1:8000/api/v1/schema/system* <br> 
+Measurements: *http://127.0.0.1:8000/api/v1/schema/measurement* <br>
 
 ## Monitoring tools installation
 
