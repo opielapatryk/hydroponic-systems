@@ -1,0 +1,9 @@
+pika
+Django
+djangorestframework
+drf_yasg
+black
+flake8
+psycopg2-binary
+# psycopg2
+faker
