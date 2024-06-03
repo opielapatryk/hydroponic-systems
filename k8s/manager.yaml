@@ -1,0 +1,66 @@
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceDefaults
+metadata:
+  name: manager
+  namespace: default
+spec:
+  protocol: "http"
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: manager
+  namespace: default
+automountServiceAccountToken: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: manager
+  name: manager
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8000
+      targetPort: 8000
+  selector:
+    app: manager
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: manager
+  namespace: default
+  labels:
+    app: manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: manager
+  template:
+    metadata:
+      labels:
+        app: manager
+        service: manager
+      annotations:
+        consul.hashicorp.com/connect-inject: "true"
+        consul.hashicorp.com/connect-service-upstreams: "manager-postgres:5432,rabbitmq:5672"
+    spec:
+      serviceAccountName: manager
+      containers:
+        - name: manager
+          image: "opielapatryk/manager:latest"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          command: ["sh", "-c"]
+          args:
+            - "python src/manage.py makemigrations && python src/manage.py migrate && python src/manage.py populate_systems && python src/manage.py populate_measurements && python src/manage.py runserver"
+        - name: rabbitmq-consumer
+          image: "opielapatryk/manager:latest"
+          imagePullPolicy: IfNotPresent
+          command: ["sh", "-c"]
+          args:
+            - "python src/manage.py launch_queue_listener"

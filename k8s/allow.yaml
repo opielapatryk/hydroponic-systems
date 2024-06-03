@@ -1,0 +1,100 @@
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+  name: api-gateway-nginx
+# Allow traffic from api-gateway to nginx
+spec:
+  destination:
+    name: nginx
+  sources:
+    - name: api-gateway
+      action: allow
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+  name: nginx-auth
+# Allow traffic from api-gateway to auth
+spec:
+  destination:
+    name: auth
+  sources:
+    - name: nginx
+      action: allow
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+  name: nginx-manager
+# Allow traffic from api-gateway to manager
+spec:
+  destination:
+    name: manager
+  sources:
+    - name: nginx
+      action: allow
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+  name: nginx-measurements
+# Allow traffic from nginx to measurements
+spec:
+  destination:
+    name: measurements
+  sources:
+    - name: nginx
+      action: allow
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+ name: auth-postgres
+ namespace: default
+# Allow traffic from auth to postgresql
+spec:
+ destination:
+   name: auth-postgres
+ sources:
+   - name: auth
+     action: allow
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+ name: manager-postgres
+ namespace: default
+# Allow traffic from manager to postgres
+spec:
+ destination:
+   name: manager-postgres
+ sources:
+   - name: manager
+     action: allow
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+ name: measurements-postgres
+ namespace: default
+# Allow traffic from measurements to postgres
+spec:
+ destination:
+   name: measurements-postgres
+ sources:
+   - name: measurements
+     action: allow
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+ name: apis-rabbitmq
+ namespace: default
+spec:
+ destination:
+   name: rabbitmq
+ sources:
+   - name: measurements
+     action: allow
+   - name: manager
+     action: allow

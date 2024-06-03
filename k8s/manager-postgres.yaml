@@ -1,0 +1,70 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: manager-postgres
+  namespace: default
+  labels:
+    app: manager-postgres
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5432
+      targetPort: 5432
+  selector:
+    app: manager-postgres
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceDefaults
+metadata:
+  name: manager-postgres
+  namespace: default
+spec:
+  protocol: "tcp"
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: manager-postgres
+  namespace: default
+automountServiceAccountToken: true
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: manager-postgres
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: manager-postgres
+      app: manager-postgres
+  template:
+    metadata:
+      labels:
+        service: manager-postgres
+        app: manager-postgres
+      annotations:
+        consul.hashicorp.com/connect-inject: "true"
+    spec:
+      serviceAccountName: manager-postgres
+      containers:
+        - name: manager-postgres
+          image: postgres
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: manager
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: postgres
+          volumeMounts:
+            - mountPath: "/var/lib/manager/data"
+              name: "managerdata"
+      volumes:
+        - name: managerdata
+          emptyDir: {}

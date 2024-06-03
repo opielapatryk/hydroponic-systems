@@ -1,0 +1,67 @@
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceDefaults
+metadata:
+  name: auth
+  namespace: default
+spec:
+  protocol: "tcp"
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: auth
+  namespace: default
+automountServiceAccountToken: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: auth
+  name: auth
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8001
+      targetPort: 8001
+  selector:
+    app: auth
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth
+  namespace: default
+  labels:
+    app: auth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth
+  template:
+    metadata:
+      labels:
+        app: auth
+        service: auth
+      annotations:
+        consul.hashicorp.com/connect-inject: "true"
+        consul.hashicorp.com/connect-service-upstreams: "auth-postgres:5432"
+    spec:
+      serviceAccountName: auth
+      containers:
+        - name: auth
+          image: "opielapatryk/auth_hydro:latest"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8001
+          env:
+            - name: DJANGO_SUPERUSER_USERNAME
+              value: "user"
+            - name: DJANGO_SUPERUSER_EMAIL
+              value: "joe@doe.com"
+            - name: DJANGO_SUPERUSER_PASSWORD
+              value: "password"
+          command: ["sh", "-c"]
+          args:
+            - "python src/manage.py migrate && python src/manage.py create_superuser && python src/manage.py runserver 8001"
