@@ -1,0 +1,9 @@
+Django
+djangorestframework
+djangorestframework-simplejwt
+drf_yasg
+black
+flake8
+# psycopg2
+psycopg2-binary
+setuptools
