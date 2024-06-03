@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "manager",
     "drf_yasg",
     "django_filters",
+    "broker"
 ]
 
 MIDDLEWARE = [
