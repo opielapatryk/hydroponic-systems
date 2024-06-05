@@ -1,5 +1,6 @@
 # hydroponic-systems
 [![Watch the video](https://raw.githubusercontent.com/opielapatryk/opielapatryk/main/thumbnail.png)](https://raw.githubusercontent.com/opielapatryk/opielapatryk/main/preview.mp4)
+[![Watch the video](https://raw.githubusercontent.com/opielapatryk/opielapatryk/main/thumbnail.png)](https://youtu.be/DAO_oPXLdBc)
 ![Container Diagram](./container.png)
 
 Application facilitate hydroponic system management implemented using microservices made of:
