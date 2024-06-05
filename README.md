@@ -1,5 +1,7 @@
-![Container Diagram](./container.png)
 # hydroponic-systems
+[![Watch the video](https://img.youtube.com/vi/DAO_oPXLdBc/0.jpg)](https://www.youtube.com/watch?v=DAO_oPXLdBc)
+![Container Diagram](./container.png)
+
 Application facilitate hydroponic system management implemented using microservices made of:
 - AuthService
 - ManagerService
