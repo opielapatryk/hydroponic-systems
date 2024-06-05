@@ -1,7 +1,6 @@
 # hydroponic-systems
 ![Container Diagram](./container.png)
-[![Watch the video](https://raw.githubusercontent.com/opielapatryk/opielapatryk/main/thumbnail.png)](https://github.com/opielapatryk/hydroponic-systems/assets/104018084/27f1cb56-5492-41e6-bc26-a9ef2c748e4b)
-
+<video src="https://github.com/opielapatryk/hydroponic-systems/assets/104018084/27f1cb56-5492-41e6-bc26-a9ef2c748e4b" width="320" height="240" controls></video>
 
 Application facilitate hydroponic system management implemented using microservices made of:
 - AuthService
