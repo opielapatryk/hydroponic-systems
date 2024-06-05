@@ -48,5 +48,37 @@ retry_until_success "kubectl apply -f rbac.yaml" "rbac.yaml"
 
 echo "#######################################"
 echo "Deployment Complete"
-echo "Grab your coffe and come back in 10 minutes :)"
+echo "Grab your coffe and come back in 15 minutes :)"
+echo "Endpoints:"
+echo "Authentication: http://127.0.0.1:8000/api/v1/schema/auth"
+echo "System: http://127.0.0.1:8000/api/v1/schema/system"
+echo "Measurements: http://127.0.0.1:8000/api/v1/schema/measurement"
 echo "#######################################"
+
+sleep 900 # Wait for services installation
+
+# Determine the operating system and open URLs accordingly
+OS="$(uname)"
+if [ "$OS" == "Linux" ]; then
+    if command -v xdg-open > /dev/null; then
+        xdg-open "http://127.0.0.1:8000/api/v1/schema/auth"
+        xdg-open "http://127.0.0.1:8000/api/v1/schema/system"
+        xdg-open "http://127.0.0.1:8000/api/v1/schema/measurement"
+    elif command -v gnome-open > /dev/null; then
+        gnome-open "http://127.0.0.1:8000/api/v1/schema/auth"
+        gnome-open "http://127.0.0.1:8000/api/v1/schema/system"
+        gnome-open "http://127.0.0.1:8000/api/v1/schema/measurement"
+    fi
+elif [ "$OS" == "Darwin" ]; then
+    open "http://127.0.0.1:8000/api/v1/schema/auth"
+    open "http://127.0.0.1:8000/api/v1/schema/system"
+    open "http://127.0.0.1:8000/api/v1/schema/measurement"
+elif [ "$OS" == "CYGWIN" ] || [ "$OS" == "MINGW" ] || [ "$OS" == "MSYS" ]; then
+    start "http://127.0.0.1:8000/api/v1/schema/auth"
+    start "http://127.0.0.1:8000/api/v1/schema/system"
+    start "http://127.0.0.1:8000/api/v1/schema/measurement"
+else
+    echo "Unsupported OS: $OS"
+fi
+
+kubectl get pods --watch
